@@ -155,6 +155,10 @@ export default defineConfig({
             path: '../mutators/custom-mutation.ts',
             name: 'useCustomMutation',
           },
+          queryOptions: {
+            path: '../mutators/custom-query-options.ts',
+            name: 'getCustomQueryOptions',
+          },
         },
       },
       clean: true,

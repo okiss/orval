@@ -139,6 +139,7 @@ const generatePrefetch = ({
 const generateQueryImplementation = ({
   queryOption: { name, queryParam, options, type, queryKeyFnName },
   operationName,
+  operationId,
   queryProperties,
   queryKeyProperties,
   queryParams,
@@ -170,6 +171,7 @@ const generateQueryImplementation = ({
   };
   isRequestOptions: boolean;
   operationName: string;
+  operationId: string;
   queryProperties: string;
   queryKeyProperties: string;
   params: GetterParams;
@@ -414,7 +416,9 @@ ${hookOptions}
             }({...queryOptions, queryKey, queryFn}${
               queryOptionsMutator.hasSecondArg ? `, { ${queryProperties} }` : ''
             }${
-              queryOptionsMutator.hasThirdArg ? `, { url: \`${route}\` }` : ''
+              queryOptionsMutator.hasThirdArg
+                ? `, { url: \`${route}\`, operationId: '${operationId}', operationName: '${operationName}' }`
+                : ''
             });`
           : ''
       }
@@ -804,6 +808,7 @@ ${queryKeyFns}`;
       queryImplementations += generateQueryImplementation({
         queryOption,
         operationName,
+        operationId,
         queryProperties,
         queryKeyProperties,
         params,

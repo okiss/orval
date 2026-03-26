@@ -679,6 +679,14 @@ Include abort signal in queries.
 
 Custom query/mutation key or options functions.
 
+When using a mutator with `queryOptions` or `mutationOptions`, the mutator function can accept up to three arguments:
+
+1. The options object (query options or mutation options)
+2. An object containing the request parameters (e.g., `{ params }`)
+3. An object with operation metadata: `{ url, operationId, operationName }`
+
+The third argument is only passed when the mutator function declares three parameters.
+
 ### shouldExportMutatorHooks
 
 **Type:** `Boolean`

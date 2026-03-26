@@ -30,6 +30,7 @@ import type {
   Pets,
 } from './model';
 
+import { getCustomQueryOptions } from '../../../mutators/custom-query-options';
 import { useCustomMutation } from '../../../mutators/custom-mutation';
 export type HTTPStatusCode1xx = 100 | 101 | 102 | 103;
 export type HTTPStatusCode2xx = 200 | 201 | 202 | 203 | 204 | 205 | 206 | 207;
@@ -128,7 +129,7 @@ export const getListPetsQueryKey = (params?: ListPetsParams) => {
   return [`/pets`, ...(params ? [params] : [])] as const;
 };
 
-export const getListPetsQueryOptions = <
+export const useListPetsQueryOptions = <
   TData = Awaited<ReturnType<typeof listPets>>,
   TError = Error,
 >(
@@ -148,7 +149,13 @@ export const getListPetsQueryOptions = <
     signal,
   }) => listPets(params, { signal, ...fetchOptions });
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+  const customOptions = getCustomQueryOptions(
+    { ...queryOptions, queryKey, queryFn },
+    { params },
+    { url: `/pets`, operationId: 'listPets', operationName: 'listPets' },
+  );
+
+  return customOptions as UseQueryOptions<
     Awaited<ReturnType<typeof listPets>>,
     TError,
     TData
@@ -240,7 +247,7 @@ export function useListPets<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getListPetsQueryOptions(params, options);
+  const queryOptions = useListPetsQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -434,7 +441,7 @@ export const getShowPetByIdQueryKey = (petId: string) => {
   return [`/pets/${petId}`] as const;
 };
 
-export const getShowPetByIdQueryOptions = <
+export const useShowPetByIdQueryOptions = <
   TData = Awaited<ReturnType<typeof showPetById>>,
   TError = Error,
 >(
@@ -454,12 +461,17 @@ export const getShowPetByIdQueryOptions = <
     signal,
   }) => showPetById(petId, { signal, ...fetchOptions });
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!petId,
-    ...queryOptions,
-  } as UseQueryOptions<
+  const customOptions = getCustomQueryOptions(
+    { ...queryOptions, queryKey, queryFn },
+    { petId },
+    {
+      url: `/pets/${petId}`,
+      operationId: 'showPetById',
+      operationName: 'showPetById',
+    },
+  );
+
+  return customOptions as UseQueryOptions<
     Awaited<ReturnType<typeof showPetById>>,
     TError,
     TData
@@ -551,7 +563,7 @@ export function useShowPetById<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getShowPetByIdQueryOptions(petId, options);
+  const queryOptions = useShowPetByIdQueryOptions(petId, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -731,7 +743,7 @@ export const getHealthCheckQueryKey = () => {
   return [`/health`] as const;
 };
 
-export const getHealthCheckQueryOptions = <
+export const useHealthCheckQueryOptions = <
   TData = Awaited<ReturnType<typeof healthCheck>>,
   TError = Error,
 >(options?: {
@@ -748,7 +760,17 @@ export const getHealthCheckQueryOptions = <
     signal,
   }) => healthCheck({ signal, ...fetchOptions });
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+  const customOptions = getCustomQueryOptions(
+    { ...queryOptions, queryKey, queryFn },
+    {},
+    {
+      url: `/health`,
+      operationId: 'healthCheck',
+      operationName: 'healthCheck',
+    },
+  );
+
+  return customOptions as UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
     TError,
     TData
@@ -836,7 +858,7 @@ export function useHealthCheck<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getHealthCheckQueryOptions(options);
+  const queryOptions = useHealthCheckQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -897,7 +919,7 @@ export const getShowPetWithOwnerQueryKey = (petId: string) => {
   return [`/pets/${petId}/owner`] as const;
 };
 
-export const getShowPetWithOwnerQueryOptions = <
+export const useShowPetWithOwnerQueryOptions = <
   TData = Awaited<ReturnType<typeof showPetWithOwner>>,
   TError = Error,
 >(
@@ -921,12 +943,17 @@ export const getShowPetWithOwnerQueryOptions = <
     Awaited<ReturnType<typeof showPetWithOwner>>
   > = ({ signal }) => showPetWithOwner(petId, { signal, ...fetchOptions });
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!petId,
-    ...queryOptions,
-  } as UseQueryOptions<
+  const customOptions = getCustomQueryOptions(
+    { ...queryOptions, queryKey, queryFn },
+    { petId },
+    {
+      url: `/pets/${petId}/owner`,
+      operationId: 'showPetWithOwner',
+      operationName: 'showPetWithOwner',
+    },
+  );
+
+  return customOptions as UseQueryOptions<
     Awaited<ReturnType<typeof showPetWithOwner>>,
     TError,
     TData
@@ -1034,7 +1061,7 @@ export function useShowPetWithOwner<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getShowPetWithOwnerQueryOptions(petId, options);
+  const queryOptions = useShowPetWithOwnerQueryOptions(petId, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
