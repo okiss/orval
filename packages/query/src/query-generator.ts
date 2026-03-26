@@ -349,7 +349,7 @@ const generateQueryImplementation = ({
   });
 
   const queryOptionsFnName = camel(
-    queryKeyMutator || queryOptionsMutator || mutator?.isHook
+    queryKeyMutator || queryOptionsMutator?.isHook || mutator?.isHook
       ? `use-${name}-queryOptions`
       : `get-${name}-queryOptions`,
   );

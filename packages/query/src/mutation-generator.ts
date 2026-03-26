@@ -189,7 +189,7 @@ export const generateMutationHook = async ({
   });
 
   const mutationOptionsFnName = camel(
-    mutationOptionsMutator || mutator?.isHook
+    mutationOptionsMutator?.isHook || mutator?.isHook
       ? `use-${operationName}-mutationOptions`
       : `get-${operationName}-mutationOptions`,
   );
